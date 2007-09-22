@@ -1,0 +1,8 @@
+History.txt
+Manifest.txt
+README.txt
+Rakefile
+lib/passive_record.rb
+lib/passive_record/base.rb
+lib/passive_record/schema.rb
+test/test_passive_record.rb
