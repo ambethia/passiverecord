@@ -5,11 +5,11 @@ class Room < PassiveRecord::Base
   has_many :furniture
   schema :name => String
   
-  define :name => "Family Room"
-  define :name => "Kitchen"
-  define :name => "Bedroom"
-  define :name => "Restroom"
-  define :name => "Office"
+  create :name => "Family Room"
+  create :name => "Kitchen"
+  create :name => "Bedroom"
+  create :name => "Restroom"
+  create :name => "Office"
 end
 
 ActiveRecord::Base.establish_connection(:adapter  => "sqlite3", :database => ":memory:")

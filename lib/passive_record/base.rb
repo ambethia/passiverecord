@@ -25,7 +25,7 @@ module PassiveRecord
 
     class << self
 
-      def define(*args)
+      def create(*args)
         attributes = extract_options!(args)
         key = args.first || @@instances.size+1
         instance = self.new(attributes)

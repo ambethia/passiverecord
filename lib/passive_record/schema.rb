@@ -6,7 +6,8 @@ module PassiveRecord
     end
 
     module ClassMethods
-
+      
+      # Define the schema for your model, this also adds attribute accessors for schema columns
       def schema(definition = {})
         @@schema = definition
         definition.keys.each do |attribute_name|
