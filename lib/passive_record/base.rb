@@ -3,7 +3,7 @@ module PassiveRecord
   class RecordNotFound < PassiveRecordError; end
 
   class Base
-
+    
     @@instances = {}
 
     attr_accessor :attributes, :key

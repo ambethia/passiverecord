@@ -83,6 +83,9 @@ class PassiveRecordTest < Test::Unit::TestCase
   def test_should_find_by_many_attributes
     assert_equal Continent.find(6), Continent.find_by_name_and_size(/America/, 17840000)
   end
+
+  def test_should_puts_some_stuff
+  end
   
   def teardown
     Continent.delete_all
