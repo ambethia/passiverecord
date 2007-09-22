@@ -8,7 +8,7 @@ end
 class PassiveRecordTest < Test::Unit::TestCase
   
   def setup
-    # geographic 6 continent model
+    # Add the geographic 6 continents
     Continent.define :name => "Africa",        :size => 30370000, :population => 890000000 
     Continent.define :name => "Antarctica",    :size => 13720000, :population => 1000
     Continent.define :name => "Australia",     :size => 7600000,  :population => 20000000
@@ -18,7 +18,12 @@ class PassiveRecordTest < Test::Unit::TestCase
   end
     
   def test_should_define_instance
-    assert_equal 7, Continent.define(:name => "Atlantis")
+    assert_equal 7, Continent.define(:name => "Atlantis", :size => 0, :population => 0)
+  end
+  
+  def test_should_define_instance_with_manual_key
+    assert_equal "ATL", Continent.define("ATL", :name => "Atlantis", :size => 0, :population => 0)
+    assert Continent.find("ATL")
   end
   
   def test_should_count_instances
@@ -51,7 +56,7 @@ class PassiveRecordTest < Test::Unit::TestCase
   def test_should_find_all
     assert_equal 6, Continent.find(:all).size
   end
-    
+  
   def test_should_get_attributes
     assert_equal "Africa", Continent.find(1).name
     assert_equal 1000,     Continent.find(2).population
@@ -62,10 +67,22 @@ class PassiveRecordTest < Test::Unit::TestCase
     assert_equal "Motherland", Continent.find(1).name
   end
   
-  # def test_should_find_by_attribute
-  #   assert_equal Continent.find(1), Continent.find_by_name("Africa")
-  #   assert_equal Continent.find(5), Continent.find_by_population(515000000)
-  # end
+  def test_should_find_by_attribute
+    assert_equal Continent.find(1), Continent.find_by_name("Africa")
+    assert_equal Continent.find(5), Continent.find_by_population(515000000)
+  end
+  
+  def test_should_find_all_by_attribute_as_regex
+    assert_equal Continent.find(5,6), Continent.find_all_by_name(/America/)
+  end
+
+  def test_should_find_all_by_attribute_in_range
+    assert_equal Continent.find(2,3), Continent.find_all_by_population(1000..20000000)
+  end
+  
+  def test_should_find_by_many_attributes
+    assert_equal Continent.find(6), Continent.find_by_name_and_size(/America/, 17840000)
+  end
   
   def teardown
     Continent.delete_all

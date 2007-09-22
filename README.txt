@@ -1,6 +1,5 @@
-PassiveRecord
-    by Jason L Perry 
-    http://paint.itred.org
+= PassiveRecord
+by Jason L Perry (http://paint.itred.org)
 
 == DESCRIPTION:
   
@@ -8,13 +7,22 @@ A replacement for ActiveRecord when you just need to model
 a few unchanging objects, and don't necessarily need a full blown
 ActiveRecord class and table in the database.
 
-== FEATURES/PROBLEMS:
+== FEATURES:
   
-* None yet
+* some basic ActiveRecord style finders
+* dynamic attribute based finders, supporting basic comparisons as well
+  regular expressions and ranges
+  
+== TODOs:
+
+* some integrated ActiveRecord associactions, ie: ActiveRecord#belongs_to(:passive_record)
+  PassiveRecord#has_many(:active_records)
+* implementation of :conditions, :order and other options
+* implementation of find(:first) (depends on :order being implemented)
+* document the code
 
 == SYNOPSIS:
 
-  # 6 Continent model
   class Continent < PassiveRecord::Base
     schema :name => String,          :size => Integer,  :population => Integer
   
@@ -26,12 +34,19 @@ ActiveRecord class and table in the database.
     define :name => "South America", :size => 17840000, :population => 371000000
   end
 
+  Continent.find(1)                                     # => Africa
+  Continent.find_by_name("Africa")                      # => Yes, also Africa
+  Continent.find_by_name_and_size(/America/, 17840000)  # => South America
+  Continent.find_all_by_population(1000..20000000)      # => Antarctica and Australia
+  Continent.find(:all)                                  # => All 6 (though not in any particular order, yet)
+
 == REQUIREMENTS:
 
-* None (ActiveRecord optional)
+* None (yet)
 
 == INSTALL:
 
+* gem install passiverecord
 * require "passive_record"
 
 == LICENSE:
