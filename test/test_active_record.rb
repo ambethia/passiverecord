@@ -31,8 +31,8 @@ class PassiveRecordTest < Test::Unit::TestCase
   end
   
   def test_should_have_many
-    office = Room.find_by_name("Office")
-    office.furniture
+    room = Room.find_by_name("Family Room")
+    assert_equal 2, room.furniture.size
   end
         
   def teardown
