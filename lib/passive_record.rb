@@ -15,11 +15,11 @@ end
 
 require 'passive_record/base'
 require 'passive_record/schema'
-require 'passive_record/delegation'
+require 'passive_record/associations'
 
 PassiveRecord::Base.class_eval do
   include PassiveRecord::Schema
-  include PassiveRecord::Delegation
-  delegate_class ActiveRecord::Base, :has_many
-  
+  include PassiveRecord::Associations
 end
+
+require 'ruby-debug'; Debugger.start
