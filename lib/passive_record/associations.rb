@@ -2,7 +2,7 @@
 # TODO: Trim this down, and test it thoroughly
 module PassiveRecord
   module Associations
-
+    
     def self.included(base)
       base.extend(ClassMethods)
 
@@ -14,7 +14,6 @@ module PassiveRecord
           end
         end_eval
       end
-
     end
 
     def quoted_id #:nodoc:
@@ -39,10 +38,10 @@ module PassiveRecord
       def has_many(association_id, options = {}, &extension)
         reflection = create_has_many_reflection(association_id, options, &extension)
 
-        configure_dependency_for_has_many(reflection)
+        ActiveRecord::Base.send(:configure_dependency_for_has_many, reflection)
 
         if options[:through]
-          collection_reader_method(reflection, HasManyThroughAssociation)
+          collection_reader_method(reflection, ActiveRecord::Associations::HasManyThroughAssociation)
         else
           add_multiple_associated_save_callbacks(reflection.name)
           add_association_callbacks(reflection.name, reflection.options)
@@ -67,7 +66,7 @@ module PassiveRecord
         association_constructor_method(:build,  reflection, ActiveRecord::Associations::HasOneAssociation)
         association_constructor_method(:create, reflection, ActiveRecord::Associations::HasOneAssociation)
         
-        configure_dependency_for_has_one(reflection)
+        ActiveRecord::Base.send(:configure_dependency_for_has_one, reflection)
       end
       
       def create_has_many_reflection(association_id, options, &extension)
@@ -105,44 +104,7 @@ module PassiveRecord
         write_inheritable_hash :reflections, name => reflection
         reflection
       end
-      
-      def configure_dependency_for_has_many(reflection)
-        # Add polymorphic type if the :as option is present
-        dependent_conditions = %(#{reflection.primary_key_name} = \#{record.quoted_id})
-        if reflection.options[:as]
-          dependent_conditions += " AND #{reflection.options[:as]}_type = '#{base_class.name}'"
-        end
-
-        case reflection.options[:dependent]
-          when :destroy, true
-            module_eval "before_destroy '#{reflection.name}.each { |o| o.destroy }'"
-          when :delete_all
-            module_eval "before_destroy { |record| #{reflection.class_name}.delete_all(%(#{dependent_conditions})) }"
-          when :nullify
-            module_eval "before_destroy { |record| #{reflection.class_name}.update_all(%(#{reflection.primary_key_name} = NULL),  %(#{dependent_conditions})) }"
-          when nil, false
-            # pass
-          else
-            raise ArgumentError, 'The :dependent option expects either :destroy, :delete_all, or :nullify'
-        end
-      end
-      
-      def configure_dependency_for_has_one(reflection)
-        case reflection.options[:dependent]
-          when :destroy, true
-            module_eval "before_destroy '#{reflection.name}.destroy unless #{reflection.name}.nil?'"
-          when :delete
-            module_eval "before_destroy '#{reflection.class_name}.delete(#{reflection.name}.id) unless #{reflection.name}.nil?'"
-          when :nullify
-            module_eval "before_destroy '#{reflection.name}.update_attribute(\"#{reflection.primary_key_name}\", nil) unless #{reflection.name}.nil?'"
-          when nil, false
-            # pass
-          else
-            raise ArgumentError, "The :dependent option expects either :destroy, :delete or :nullify."
-        end
-      end
-      
-      
+            
       def add_multiple_associated_save_callbacks(association_name)
         method_name = "validate_associated_records_for_#{association_name}".to_sym
         define_method(method_name) do
@@ -300,15 +262,15 @@ module PassiveRecord
         existing_methods = read_inheritable_attribute(key) || []
         write_inheritable_attribute(key, methods | existing_methods)
       end
+
+      def compute_type(*args)
+        ActiveRecord::Base.send(:compute_type, *args)
+      end
+      
+      def reflect_on_association(*args)
+        ActiveRecord::Base.send(:reflect_on_association, *args)
+      end
+      
     end
   end
 end
-
-class ActiveRecord::Reflection::AssociationReflection
-  # hack this so we don't call +commpute_type+ on our PassiveRecord subclass, no need
-  # to implement all that
-  def klass
-    @klass ||= ActiveRecord::Base.send(:compute_type, class_name)
-  end
-end
-

@@ -23,6 +23,14 @@ module PassiveRecord
       self.attributes[attribute_name] = value
     end
 
+    def ==(comparison_object)
+      comparison_object.equal?(self) ||
+        (comparison_object.instance_of?(self.class) && 
+          comparison_object.id == id && 
+          !comparison_object.new_record?)
+    end
+    
+
     class << self
 
       def create(*args)
@@ -35,6 +43,7 @@ module PassiveRecord
       end
 
       def find(*args)
+        options = extract_options!(args)
         args.first == :all ? find_every : find_from_keys(args)
       end
 
@@ -55,7 +64,8 @@ module PassiveRecord
         @@instances.values
       end
 
-      def find_from_keys(keys)
+      def find_from_keys(keys, options = {})
+        
         expects_array = keys.first.kind_of?(Array)
         return keys.first if expects_array && keys.first.empty?
         keys = keys.flatten.compact.uniq
