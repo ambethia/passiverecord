@@ -1,5 +1,6 @@
 == 0.0.1 2007-09-26
 
 * Initial release
+  * proof of concept
   * create, find, find_by_*
   * has_many, has_one

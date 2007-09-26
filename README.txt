@@ -21,6 +21,7 @@ ActiveRecord class and table in the database.
 * extend find options like :conditions, :order
 * find(:first) (depends on :order being implemented)
 * better documentation of the code
+* fix warnings in tests
 
 == SYNOPSIS:
 
