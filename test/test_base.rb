@@ -1,3 +1,5 @@
+$:.unshift(File.dirname(__FILE__) + '/../lib')
+
 require 'test/unit'
 require 'passive_record'
 
@@ -5,35 +7,29 @@ class Continent < PassiveRecord::Base
   schema :name => String, :size => Integer, :population => Integer  
 end
 
-class PassiveRecordTest < Test::Unit::TestCase
+class PassiveRecord::BaseTest < Test::Unit::TestCase
   
   def setup
     # Add the geographic 6 continents
-    Continent.create :name => "Africa",        :size => 30370000, :population => 890000000 
-    Continent.create :name => "Antarctica",    :size => 13720000, :population => 1000
-    Continent.create :name => "Australia",     :size => 7600000,  :population => 20000000
-    Continent.create :name => "Eurasia",       :size => 53990000, :population => 4510000000
-    Continent.create :name => "North America", :size => 24490000, :population => 515000000
-    Continent.create :name => "South America", :size => 17840000, :population => 371000000
+    Continent.send :create, :name => "Africa",        :size => 30370000, :population => 890000000 
+    Continent.send :create, :name => "Antarctica",    :size => 13720000, :population => 1000
+    Continent.send :create, :name => "Australia",     :size => 7600000,  :population => 20000000
+    Continent.send :create, :name => "Eurasia",       :size => 53990000, :population => 4510000000
+    Continent.send :create, :name => "North America", :size => 24490000, :population => 515000000
+    Continent.send :create, :name => "South America", :size => 17840000, :population => 371000000
   end
     
   def test_should_create_instance
-    assert_equal 7, Continent.create(:name => "Atlantis", :size => 0, :population => 0)
+    assert_equal 7, Continent.send(:create, :name => "Atlantis", :size => 0, :population => 0)
   end
   
   def test_should_create_instance_with_manual_key
-    assert_equal "ATL", Continent.create("ATL", :name => "Atlantis", :size => 0, :population => 0)
+    assert_equal "ATL", Continent.send(:create, "ATL", :name => "Atlantis", :size => 0, :population => 0)
     assert Continent.find("ATL")
   end
   
   def test_should_count_instances
     assert_equal 6, Continent.count
-  end
-
-  def test_should_delete_all_instances
-    assert_equal 6, Continent.count
-    Continent.delete_all
-    assert_equal 0, Continent.count
   end
     
   def test_should_find_one_by_key
@@ -88,7 +84,7 @@ class PassiveRecordTest < Test::Unit::TestCase
   end
   
   def teardown
-    Continent.delete_all
+    Continent.send :class_variable_set, "@@instances", {}
   end
    
 end

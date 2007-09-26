@@ -3,7 +3,6 @@ module PassiveRecord
   class RecordNotFound < PassiveRecordError; end
 
   class Base
-    
     @@instances = {}
 
     attr_accessor :attributes, :key
@@ -42,6 +41,8 @@ module PassiveRecord
         return key
       end
 
+      private :create
+
       def find(*args)
         options = extract_options!(args)
         args.first == :all ? find_every : find_from_keys(args)
@@ -51,17 +52,13 @@ module PassiveRecord
         find_every.size
       end
 
-      def delete_all
-        @@instances = {}
-      end
-
     protected
 
       # def find_initial(options)
       # end
 
       def find_every
-        @@instances.values
+        @@instances.select { |key, value| value.is_a?(self) }.map {|its| its.last}
       end
 
       def find_from_keys(keys, options = {})
@@ -81,12 +78,17 @@ module PassiveRecord
         end
       end
 
-      def find_one(key)
-        @@instances[key]
+      def find_one(_key)
+        values = @@instances.select { |key, value| _key == key && value.is_a?(self) }.map {|its| its.last}
+        unless values.empty?
+          return values.first
+        else
+          raise RecordNotFound, "Couldn't find #{name} with the given key."
+        end
       end
 
       def find_some(keys)
-        @@instances.values_at(*keys).compact
+        values = @@instances.select { |key, value| (keys).include?(key) && value.is_a?(self) }.map {|its| its.last}
       end
 
       def extract_options!(args) #:nodoc:
