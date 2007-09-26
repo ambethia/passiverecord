@@ -1,15 +1,10 @@
-module PassiveRecord VERSION = '0.0.1'; end
-
 $:.unshift(File.dirname(__FILE__))
 
-unless defined?(ActiveRecord)
-  begin
-    $:.unshift(File.dirname(__FILE__) + "/../../activerecord/lib")  
-    require 'active_record'  
-  rescue LoadError
-    require 'rubygems'
-    require 'active_record'
-  end
+begin
+  require 'active_record'
+rescue LoadError => e
+  require 'rubygems'
+  require 'active_record'
 end
 
 require 'passive_record/base'
@@ -20,5 +15,3 @@ PassiveRecord::Base.class_eval do
   include PassiveRecord::Schema
   include PassiveRecord::Associations
 end
-
-require 'ruby-debug'; Debugger.start

@@ -12,18 +12,21 @@ ActiveRecord class and table in the database.
 * some basic ActiveRecord style finders
 * dynamic attribute based finders, supporting basic comparisons as well
   regular expressions and ranges
+* some integrated ActiveRecord associactions, ie: ActiveRecord#belongs_to(:passive_record)
+  PassiveRecord#has_many(:active_records) (excluding has_many :through)
   
 == TODOs:
 
-* some integrated ActiveRecord associactions, ie: ActiveRecord#belongs_to(:passive_record)
-  PassiveRecord#has_many(:active_records)
-* implementation of :conditions, :order and other options
-* implementation of find(:first) (depends on :order being implemented)
-* document the code
+* has_many :through
+* extend find options like :conditions, :order
+* find(:first) (depends on :order being implemented)
+* better documentation of the code
 
 == SYNOPSIS:
 
   class Continent < PassiveRecord::Base
+    has_many :countries # => an ActiveRecord class
+  
     schema :name => String,          :size => Integer,  :population => Integer
   
     create :name => "Africa",        :size => 30370000, :population => 890000000 
@@ -42,7 +45,7 @@ ActiveRecord class and table in the database.
 
 == REQUIREMENTS:
 
-* None (yet)
+* activerecord
 
 == INSTALL:
 

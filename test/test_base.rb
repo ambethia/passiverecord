@@ -1,7 +1,4 @@
-$:.unshift(File.dirname(__FILE__) + '/../lib')
-
-require 'test/unit'
-require 'passive_record'
+require File.dirname(__FILE__) + '/test_helper.rb'
 
 class Continent < PassiveRecord::Base
   schema :name => String, :size => Integer, :population => Integer  

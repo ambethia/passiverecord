@@ -1,4 +1,5 @@
-== 0.0.1 / 2007-09-21
+== 0.0.1 2007-09-26
 
-* Basic CRUD
-
+* Initial release
+  * create, find, find_by_*
+  * has_many, has_one

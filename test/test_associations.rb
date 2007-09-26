@@ -1,7 +1,4 @@
-$:.unshift(File.dirname(__FILE__) + '/../lib')
-
-require 'test/unit'
-require 'passive_record'
+require File.dirname(__FILE__) + '/test_helper.rb'
 
 class Room < PassiveRecord::Base
   has_many :furniture, :order => :name
