@@ -8,3 +8,7 @@ lib/passive_record/schema.rb
 test/test_associations.rb
 test/test_base.rb
 test/test_helper.rb
+test/fixtures/continents.rb
+test/fixtures/doors.yml
+test/fixtures/furniture.rb
+test/fixtures/furniture.yml
