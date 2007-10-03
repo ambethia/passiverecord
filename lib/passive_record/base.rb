@@ -34,10 +34,10 @@ module PassiveRecord
 
       def create(*args)
         attributes = extract_options!(args)
-        key = args.first || @@instances.size+1
+        key = args.first || find_every.size+1
         instance = self.new(attributes)
         instance.key = key
-        @@instances[key] = instance
+        @@instances[base_key(key)] = instance
         return key
       end
 
@@ -50,6 +50,10 @@ module PassiveRecord
 
       def count
         find_every.size
+      end
+      
+      def base_class
+        class_of_passive_record_descendant(self)
       end
 
     protected
@@ -79,7 +83,7 @@ module PassiveRecord
       end
 
       def find_one(_key)
-        values = @@instances.select { |key, value| _key == key && value.is_a?(self) }.map {|its| its.last}
+        values = @@instances.select { |key, value| base_key(_key) == key && value.is_a?(self) }.map {|its| its.last}
         unless values.empty?
           return values.first
         else
@@ -88,7 +92,8 @@ module PassiveRecord
       end
 
       def find_some(keys)
-        values = @@instances.select { |key, value| (keys).include?(key) && value.is_a?(self) }.map {|its| its.last}
+        base_keys = keys.map { |key| base_key(key)  }
+        values = @@instances.select { |key, value| (base_keys).include?(key) && value.is_a?(self) }.map {|its| its.last }
       end
 
       def extract_options!(args) #:nodoc:
@@ -103,7 +108,7 @@ module PassiveRecord
           # super unless all_attributes_exists?(attribute_names)
           attributes = {}
           attribute_names.each_with_index { |name, idx| attributes[name] = arguments[idx] }
-          expressions = []
+          expressions = ["value.is_a?(self)"]
           attributes.each_pair { |key, value| expressions << attribute_expression("value.#{key}", value)  }          
           results = @@instances.select { |key, value| eval expressions.join(" && ")  }.map {|its| its.last}
           return expects_array ? results : results.pop
@@ -119,6 +124,28 @@ module PassiveRecord
         when String then "#{name} == \"#{argument}\""
         else             "#{name} == #{argument}"
         end
+      end
+      
+      # Returns the class descending directly from PassiveRecord in the inheritance hierarchy.
+      def base_class(klass = self)
+        if klass.superclass == Base
+          klass
+        elsif klass.superclass.nil?
+          raise PassiveRecordError, "#{name} doesn't belong in a hierarchy descending from PassiveRecord"
+        else
+          base_class(klass.superclass)
+        end
+      end
+            
+      # Returns the real hash key used to store instances.
+      # Keys are name spaced with their class name, ie "Continent:1"
+      def base_key(key)
+        "#{base_class.name}:#{key}"
+      end
+      
+      # Returns the key portion of a +base_key+
+      def key_base(base_key)
+        base_key.split(":").last
       end
       
     end

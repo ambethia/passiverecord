@@ -1,0 +1,13 @@
+---
+couch:
+  id: 1
+  name: Couch
+  room_id: 1
+ottoman:
+  id: 2
+  name: Ottoman
+  room_id: 1
+ottlite:
+  id: 3
+  name: Ott-lite
+  room_id: 5
