@@ -5,7 +5,7 @@ by Jason L Perry (http://paint.itred.org)
   
 A replacement for ActiveRecord when you just need to model
 a few unchanging objects, and don't necessarily need a full blown
-ActiveRecord class and table in the database.
+ActiveRecord class and table in the database. Use with reservation.
 
 == FEATURES:
   
