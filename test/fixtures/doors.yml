@@ -1,9 +1,0 @@
----
-office:
-  id: 1
-  inside_id: 5
-  outside_id: 1
-restroom:
-  id: 2
-  inside_id: 4
-  outside_id: 1

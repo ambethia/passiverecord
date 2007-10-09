@@ -1,5 +1,8 @@
 require 'rubygems'
 require 'rake'
+
+ENV['RUBY_FLAGS'] = "-I#{%w(lib ext bin test).join(File::PATH_SEPARATOR)}"
+
 begin
   require 'echoe'
 

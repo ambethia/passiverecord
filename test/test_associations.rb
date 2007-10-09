@@ -3,39 +3,40 @@ require File.dirname(__FILE__) + '/test_helper.rb'
 class PassiveRecord::AssociationsTest < Test::Unit::TestCase
   
   def setup
-    create_fixtures :doors, :furniture
+    create_fixtures :candraspouses, :sambocranks, :rhizocables
   end
   
   def test_should_have_many
-    furniture = [
-      Furniture.find_by_name("Couch"),
-      Furniture.find_by_name("Ottoman")
+    sambocranks = [
+      Sambocrank.find_by_name("Dakferous"),
+      Sambocrank.find_by_name("Sambaular")
     ]
-    room = Room.find_by_name("Family Room")
-    assert_equal furniture, room.furniture
+    foss = Foss.find_by_name("Hypogenoaular")
+    assert_equal sambocranks, foss.sambocranks
   end
 
   def test_should_have_many_through
-    rooms = [
-      Room.find_by_name("Office"),
-      Room.find_by_name("Restroom")
+    foss = Foss.find_by_name("Zaxment")
+    
+    rhizocables = [
+      Rhizocable.find_by_name("Ovumgyps"),
+      Rhizocable.find_by_name("Alfmetric")
     ]
     
-    room = Room.find_by_name("Family Room")
-    
-    # assert_equal room, room.exits
+    assert_equal rhizocables, foss.rhizocables
   end
 
   def test_should_have_one
-    lamp = Furniture.find_by_name("Ott-lite")
-    room = Room.find_by_name("Office")
-    assert_equal lamp, room.light_fixture
+    candraspouse = Candraspouse.find_by_name("Maiamorphic")
+    foss = Foss.find_by_name("Zaxment")
+    
+    assert_equal candraspouse, foss.candraspouse
   end
   
   def test_should_belong_to
-    lamp = Furniture.find_by_name("Ott-lite")
-    room = Room.find_by_name("Office")
-
-    assert_equal room, lamp.room    
+    candraspouse = Candraspouse.find_by_name("Eyenium")
+    foss = Foss.find_by_name("Hypogenoaular")
+    
+    assert_equal foss, candraspouse.foss
   end  
 end

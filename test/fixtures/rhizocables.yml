@@ -1,0 +1,16 @@
+---
+ovumgyps:
+  id: 1
+  name: Ovumgyps
+  foss_id: 2
+  sambocrank_id: 3
+alfmetric:
+  id: 2
+  name: Alfmetric
+  foss_id: 2
+  sambocrank_id: 3
+hypoverbitis:
+  id: 3
+  name: Hypoverbitis
+  foss_id: 1
+  sambocrank_id: 2

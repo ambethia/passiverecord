@@ -13,8 +13,9 @@ Test::Unit::TestCase.fixture_path = File.dirname(__FILE__) + "/fixtures/"
 
 $LOAD_PATH.unshift(Test::Unit::TestCase.fixture_path)
 
+require 'schema'
 require 'continents'
-require 'furniture'
+require 'fosses'
 
 class Test::Unit::TestCase #:nodoc:
 

@@ -104,6 +104,10 @@ module PassiveRecord
         write_inheritable_hash :reflections, name => reflection
         reflection
       end
+      
+      def reflections
+        read_inheritable_attribute(:reflections) || write_inheritable_attribute(:reflections, {})
+      end
             
       def add_multiple_associated_save_callbacks(association_name)
         method_name = "validate_associated_records_for_#{association_name}".to_sym
@@ -176,16 +180,15 @@ module PassiveRecord
       
       def collection_reader_method(reflection, association_proxy_class)
         define_method(reflection.name) do |*params|
+          
           force_reload = params.first unless params.empty?
           association = instance_variable_get("@#{reflection.name}")
-
           unless association.respond_to?(:loaded?)
             association = association_proxy_class.new(self, reflection)
             instance_variable_set("@#{reflection.name}", association)
           end
-
           association.reload if force_reload
-
+          
           association
         end
       end
@@ -267,8 +270,16 @@ module PassiveRecord
         ActiveRecord::Base.send(:compute_type, *args)
       end
       
-      def reflect_on_association(*args)
-        ActiveRecord::Base.send(:reflect_on_association, *args)
+      def reflect_on_association(association)
+        reflections[association].is_a?(ActiveRecord::Reflection::AssociationReflection) ? reflections[association] : nil
+      end
+      
+      def table_name
+        "table_name_foo"
+      end
+      
+      def primary_key
+        "primary_key_bar"
       end
       
     end
