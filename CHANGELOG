@@ -1,3 +1,5 @@
+v0.2. has_many :through is in the house.
+
 v0.1. Different subclasses of PassiveRecord can now use the same keys safely.
 
 v0.0.2. Switching to Echoe for gem packaging and removing the end-user dependency for Hoe
